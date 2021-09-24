@@ -1,10 +1,13 @@
-# imagej-plugin-template
-Simple project template for creating ImageJ Plugins.
+# Binary Morphology
 
-The aim is to provide a quick way to start a plugin for ImageJ, using the "legacy" plugin style. 
+Simple plugin for performing morphological filtering on binary images. 
 
-The project is based on maven. It uses sci-java as parent configuration. The parent configuration 
-is somewhat old (1.126), but I encountered configuration troubles with more recent ones. 
+The classical implementations for morphological filtering are based on computation of minimum and
+maximum values with 2D or 3D neighborhood. This may lead to long computation times, especially for
+spherical structuring elements.
+
+The implementations in this plugin focus on binary images. It is then possible to replace dilation 
+and erosion operation by the computation of a distance map followed by a threshold.
 
 The base configuration has few dependencies:
 
@@ -13,10 +16,5 @@ The base configuration has few dependencies:
 
 ## Installation
 
-Simply clone the project into the directory of your choice. 
-Then you can edit the pom.xml with informations specific to the project. 
-In particular, the name of the project is used by the Eclipse IDE to index
-the project.
-
-A sample plugin file is provided in `src/main/java/net.ijt/DemoPlugin.java` file.
-The plugin configuration file is in `src/main/resources/plugins.config`.
+Simply add the jar file into the "plugins" directory, and restart ImageJ/Fiji. A new "Morphology"
+menu will appear in the plugins directory, with the available options.
