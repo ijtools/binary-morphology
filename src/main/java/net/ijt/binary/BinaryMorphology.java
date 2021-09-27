@@ -4,6 +4,7 @@ import ij.ImageStack;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import inra.ijpb.binary.BinaryImages;
+import inra.ijpb.binary.ChamferWeights;
 import inra.ijpb.binary.ChamferWeights3D;
 import inra.ijpb.data.image.Images3D;
 
@@ -35,9 +36,10 @@ public class BinaryMorphology
 		ImageProcessor imageInv = image.duplicate();
 		imageInv.invert();
 		
-		ImageProcessor distMap = BinaryImages.distanceMap(imageInv, new short[]{5, 7, 11}, true);
+		short[] weights = ChamferWeights.CHESSKNIGHT.getShortWeights();
+		ImageProcessor distMap = BinaryImages.distanceMap(imageInv, weights, false);
 		
-		return Relational.LT.process(distMap, radius + 0.5);
+		return Relational.LT.process(distMap, (radius + 0.5) * weights[0]);
 	}
 	
 	/**
@@ -49,16 +51,17 @@ public class BinaryMorphology
 	 * transform computation, usually chamfer-based.
 	 * 
 	 * @param image
-	 *            the binary image to dilate
+	 *            the binary image to erode
 	 * @param radius
 	 *            the radius of the disk structuring element
-	 * @return the result of dilation.
+	 * @return the result of erosion.
 	 */
 	public static final ByteProcessor erosionDisk(ByteProcessor image, double radius)
 	{
-		ImageProcessor distMap = BinaryImages.distanceMap(image, new short[]{5, 7, 11}, true);
+		short[] weights = ChamferWeights.CHESSKNIGHT.getShortWeights();
+		ImageProcessor distMap = BinaryImages.distanceMap(image, weights, false);
 		
-		return Relational.GE.process(distMap, radius + 0.5);
+		return Relational.GE.process(distMap, (radius + 0.5) * weights[0]);
 	}
 	
 
@@ -71,7 +74,7 @@ public class BinaryMorphology
 	 * transform computation, usually chamfer-based.
 	 * 
 	 * @param image
-	 *            the binary image to dilate
+	 *            the binary 3D image to dilate
 	 * @param radius
 	 *            the radius of the ball structuring element
 	 * @return the result of dilation.
@@ -82,9 +85,10 @@ public class BinaryMorphology
 		ImageStack imageInv = image.duplicate();
 		Images3D.invert(imageInv);
 		
-		ImageStack distMap = BinaryImages.distanceMap(imageInv, ChamferWeights3D.WEIGHTS_3_4_5_7.getShortWeights(), true);
+		short[] weights = ChamferWeights3D.WEIGHTS_3_4_5_7.getShortWeights();
+		ImageStack distMap = BinaryImages.distanceMap(imageInv, weights, false);
 		
-		return Relational.LT.process(distMap, radius + 0.5);
+		return Relational.LT.process(distMap, (radius + 0.5) * weights[0]);
 	}
 	
 	/**
@@ -96,15 +100,16 @@ public class BinaryMorphology
 	 * transform computation, usually chamfer-based.
 	 * 
 	 * @param image
-	 *            the binary image to dilate
+	 *            the binary 3D image to erode
 	 * @param radius
 	 *            the radius of the ball structuring element
-	 * @return the result of dilation.
+	 * @return the result of erosion.
 	 */
 	public static final ImageStack erosionBall(ImageStack image, double radius)
 	{
-		ImageStack distMap = BinaryImages.distanceMap(image, ChamferWeights3D.WEIGHTS_3_4_5_7.getShortWeights(), true);
+		short[] weights = ChamferWeights3D.WEIGHTS_3_4_5_7.getShortWeights();
+		ImageStack distMap = BinaryImages.distanceMap(image, weights, false);
 		
-		return Relational.GE.process(distMap, radius + 0.5);
+		return Relational.GE.process(distMap, (radius + 0.5) * weights[0]);
 	}
 }
