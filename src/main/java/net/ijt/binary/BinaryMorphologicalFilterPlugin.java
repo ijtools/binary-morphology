@@ -31,6 +31,9 @@ import ij.plugin.filter.ExtendedPlugInFilter;
 import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
+import inra.ijpb.algo.DefaultAlgoListener;
+import net.ijt.binary.ops.BinaryDilationByDisk;
+import net.ijt.binary.ops.BinaryErosionByDisk;
 
 /**
  * Plugin for computing various morphological filters on binary images.
@@ -81,11 +84,17 @@ public class BinaryMorphologicalFilterPlugin implements ExtendedPlugInFilter,
 		{
 			if (this == EROSION)
 			{
-				return BinaryMorphology.erosionDisk(image, radius);
+				BinaryErosionByDisk algo = new BinaryErosionByDisk(radius);
+				DefaultAlgoListener.monitor(algo);
+				return algo.process(image);
+//				return BinaryMorphology.erosionDisk(image, radius);
 			}
 			else
 			{
-				return BinaryMorphology.dilationDisk(image, radius);
+				BinaryDilationByDisk algo = new BinaryDilationByDisk(radius);
+				DefaultAlgoListener.monitor(algo);
+				return algo.process(image);
+//				return BinaryMorphology.dilationDisk(image, radius);
 			}
 		}
 

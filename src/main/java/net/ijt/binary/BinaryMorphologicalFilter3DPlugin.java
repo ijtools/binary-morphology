@@ -27,7 +27,10 @@ import ij.ImageStack;
 import ij.WindowManager;
 import ij.gui.GenericDialog;
 import ij.plugin.PlugIn;
+import inra.ijpb.algo.DefaultAlgoListener;
 import inra.ijpb.util.IJUtils;
+import net.ijt.binary.ops.BinaryDilation3DByBall;
+import net.ijt.binary.ops.BinaryErosion3DByBall;
 
 /**
  * Morphological filtering for 3D binary images, using ball-shaped structuring
@@ -59,11 +62,15 @@ public class BinaryMorphologicalFilter3DPlugin implements PlugIn
 		{
 			if (this == EROSION)
 			{
-				return BinaryMorphology.erosionBall(image, radius);
+				BinaryErosion3DByBall algo = new BinaryErosion3DByBall(radius);
+				DefaultAlgoListener.monitor(algo);
+				return algo.process(image);
 			}
 			else
 			{
-				return BinaryMorphology.dilationBall(image, radius);
+				BinaryDilation3DByBall algo = new BinaryDilation3DByBall(radius);
+				DefaultAlgoListener.monitor(algo);
+				return algo.process(image);
 			}
 		}
 
