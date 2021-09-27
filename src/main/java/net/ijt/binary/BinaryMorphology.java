@@ -20,7 +20,7 @@ public class BinaryMorphology
 	 * disk with the specified radius.
 	 * 
 	 * Implementation relies on computation of distance transforms. The shape of
-	 * the structuring element will depends on the algorithm used for disrtance
+	 * the structuring element will depends on the algorithm used for distance
 	 * transform computation, usually chamfer-based.
 	 * 
 	 * @param image
@@ -37,44 +37,43 @@ public class BinaryMorphology
 		
 		ImageProcessor distMap = BinaryImages.distanceMap(imageInv, new short[]{5, 7, 11}, true);
 		
-		ByteProcessor res = threshold(distMap, radius);
-		res.invert();
-		
-		return res;
+		return Relational.LT.process(distMap, radius + 0.5);
 	}
 	
-	private static final ByteProcessor threshold(ImageProcessor image, double threshold)
-	{
-		int width = image.getWidth();
-		int height = image.getHeight();
-		ByteProcessor res = new ByteProcessor(width, height);
-		
-		for (int y = 0; y < height; y++)
-		{
-			for (int x = 0; x < width; x++)
-			{
-				if (image.getf(x, y) > threshold)
-				{
-					res.set(x, y, 255);
-				}
-			}
-		}
-		
-		return res;
-	}
-
 	/**
-	 * Computes the dilation of the binary image using as structuring element a
+	 * Computes the erosion of the binary image using as structuring element a
 	 * disk with the specified radius.
 	 * 
 	 * Implementation relies on computation of distance transforms. The shape of
-	 * the structuring element will depends on the algorithm used for disrtance
+	 * the structuring element will depends on the algorithm used for distance
 	 * transform computation, usually chamfer-based.
 	 * 
 	 * @param image
 	 *            the binary image to dilate
 	 * @param radius
 	 *            the radius of the disk structuring element
+	 * @return the result of dilation.
+	 */
+	public static final ByteProcessor erosionDisk(ByteProcessor image, double radius)
+	{
+		ImageProcessor distMap = BinaryImages.distanceMap(image, new short[]{5, 7, 11}, true);
+		
+		return Relational.GE.process(distMap, radius + 0.5);
+	}
+	
+
+	/**
+	 * Computes the dilation of the binary stack using as structuring element a
+	 * ball with the specified radius.
+	 * 
+	 * Implementation relies on computation of distance transforms. The shape of
+	 * the structuring element will depends on the algorithm used for distance
+	 * transform computation, usually chamfer-based.
+	 * 
+	 * @param image
+	 *            the binary image to dilate
+	 * @param radius
+	 *            the radius of the ball structuring element
 	 * @return the result of dilation.
 	 */
 	public static final ImageStack dilationBall(ImageStack image, double radius)
@@ -85,34 +84,27 @@ public class BinaryMorphology
 		
 		ImageStack distMap = BinaryImages.distanceMap(imageInv, ChamferWeights3D.WEIGHTS_3_4_5_7.getShortWeights(), true);
 		
-		ImageStack res = threshold(distMap, radius);
-		Images3D.invert(res);
-		
-		return res;
+		return Relational.LT.process(distMap, radius + 0.5);
 	}
 	
-	private static final ImageStack threshold(ImageStack image, double threshold)
+	/**
+	 * Computes the erosion of the binary stack using as structuring element a
+	 * ball with the specified radius.
+	 * 
+	 * Implementation relies on computation of distance transforms. The shape of
+	 * the structuring element will depends on the algorithm used for distance
+	 * transform computation, usually chamfer-based.
+	 * 
+	 * @param image
+	 *            the binary image to dilate
+	 * @param radius
+	 *            the radius of the ball structuring element
+	 * @return the result of dilation.
+	 */
+	public static final ImageStack erosionBall(ImageStack image, double radius)
 	{
-		int width = image.getWidth();
-		int height = image.getHeight();
-		int depth = image.getSize();
-		ImageStack res = ImageStack.create(width, height, depth, 8);
+		ImageStack distMap = BinaryImages.distanceMap(image, ChamferWeights3D.WEIGHTS_3_4_5_7.getShortWeights(), true);
 		
-		for (int z = 0; z < depth; z++)
-		{
-			for (int y = 0; y < height; y++)
-			{
-				for (int x = 0; x < width; x++)
-				{
-					if (image.getVoxel(x, y, z) > threshold)
-					{
-						res.setVoxel(x, y, z, 255);
-					}
-				}
-			}
-		}
-
-		return res;
+		return Relational.GE.process(distMap, radius + 0.5);
 	}
-
 }
