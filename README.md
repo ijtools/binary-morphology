@@ -11,8 +11,9 @@ and erosion operation by the computation of a distance map followed by a thresho
 
 The base configuration has few dependencies:
 
-* ImageJ
+* [ImageJ](http://imagej.net/Welcome)
 * JUnit
+* [MorphoLibJ](https://github.com/ijpb/MorphoLibJ)
 
 ## Installation
 
