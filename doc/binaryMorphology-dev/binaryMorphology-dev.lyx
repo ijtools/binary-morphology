@@ -290,6 +290,45 @@ Binary Morphology
 \end_layout
 
 \begin_layout Standard
+Morphological filters for 2D binary images, based on the class net.ijt.binary.ops.Bi
+naryMorphologicalFilterPlugin.
+\end_layout
+
+\begin_layout Minisec
+Binary Morphology 3D
+\end_layout
+
+\begin_layout Standard
+Morphological filters for 3D binary images, based on the class net.ijt.binary.ops.Bi
+naryMorphologicalFilter3DPlugin.
+ 
+\end_layout
+
+\begin_layout Section
+Versions
+\end_layout
+
+\begin_layout Subsection
+Version 0.2
+\end_layout
+
+\begin_layout Standard
+Adds the support for opening and closing, for both 2D and 3D images.
+\end_layout
+
+\begin_layout Subsection
+Version 0.1
+\end_layout
+
+\begin_layout Standard
+The following plugins are implemented:
+\end_layout
+
+\begin_layout Minisec
+Binary Morphology 
+\end_layout
+
+\begin_layout Standard
 Morphological filters for 2D binary images.
 \end_layout
 
@@ -308,6 +347,19 @@ Conclusion
 
 \begin_layout Standard
 Work still in progress, but preliminary version 0.1 is already stable.
+\end_layout
+
+\begin_layout Standard
+Planned extensions:
+\end_layout
+
+\begin_layout Itemize
+enhance distance maps (some work in progress in MorphoLibJ)
+\end_layout
+
+\begin_layout Itemize
+use Run-length encoded representation of binary images to reduce memory
+ fingerprint (not very easy to integrate to ImageJ, however)
 \end_layout
 
 \begin_layout Standard
