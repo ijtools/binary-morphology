@@ -32,8 +32,10 @@ import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import inra.ijpb.algo.DefaultAlgoListener;
+import net.ijt.binary.ops.DistanceMapBinaryClosing;
 import net.ijt.binary.ops.DistanceMapBinaryDilation;
 import net.ijt.binary.ops.DistanceMapBinaryErosion;
+import net.ijt.binary.ops.DistanceMapBinaryOpening;
 
 /**
  * Plugin for computing various morphological filters on binary images.
@@ -71,7 +73,9 @@ public class BinaryMorphologicalFilterPlugin implements ExtendedPlugInFilter,
 	enum Operation
 	{
 		EROSION("Erosion"),
-		DILATION("Dilation");
+		DILATION("Dilation"),
+		OPENING("Opening"),
+		CLOSING("Closing");
 		
 		String label;
 
@@ -82,19 +86,37 @@ public class BinaryMorphologicalFilterPlugin implements ExtendedPlugInFilter,
 		
 		public ByteProcessor process(ByteProcessor image, double radius)
 		{
-			if (this == EROSION)
+			switch (this)
+			{
+			case EROSION: 
 			{
 				DistanceMapBinaryErosion algo = new DistanceMapBinaryErosion(radius);
 				DefaultAlgoListener.monitor(algo);
 				return algo.process(image);
-//				return BinaryMorphology.erosionDisk(image, radius);
 			}
-			else
+			case DILATION: 
 			{
 				DistanceMapBinaryDilation algo = new DistanceMapBinaryDilation(radius);
 				DefaultAlgoListener.monitor(algo);
 				return algo.process(image);
-//				return BinaryMorphology.dilationDisk(image, radius);
+			}
+			case OPENING: 
+			{
+				DistanceMapBinaryOpening algo = new DistanceMapBinaryOpening(radius);
+				DefaultAlgoListener.monitor(algo);
+				return algo.process(image);
+			}
+			case CLOSING: 
+			{
+				DistanceMapBinaryClosing algo = new DistanceMapBinaryClosing(radius);
+				DefaultAlgoListener.monitor(algo);
+				return algo.process(image);
+			}
+
+			default: 
+			{
+				throw new RuntimeException("Unknown type");
+			}
 			}
 		}
 

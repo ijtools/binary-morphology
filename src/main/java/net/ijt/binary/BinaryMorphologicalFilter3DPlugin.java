@@ -29,8 +29,10 @@ import ij.gui.GenericDialog;
 import ij.plugin.PlugIn;
 import inra.ijpb.algo.DefaultAlgoListener;
 import inra.ijpb.util.IJUtils;
+import net.ijt.binary.ops.DistanceMapBinaryClosing3D;
 import net.ijt.binary.ops.DistanceMapBinaryDilation3D;
 import net.ijt.binary.ops.DistanceMapBinaryErosion3D;
+import net.ijt.binary.ops.DistanceMapBinaryOpening3D;
 
 /**
  * Morphological filtering for 3D binary images, using ball-shaped structuring
@@ -49,7 +51,9 @@ public class BinaryMorphologicalFilter3DPlugin implements PlugIn
 	enum Operation
 	{
 		EROSION("Erosion"),
-		DILATION("Dilation");
+		DILATION("Dilation"),
+		OPENING("Opening"),
+		CLOSING("Closing");
 		
 		String label;
 
@@ -60,17 +64,36 @@ public class BinaryMorphologicalFilter3DPlugin implements PlugIn
 		
 		public ImageStack process(ImageStack image, double radius)
 		{
-			if (this == EROSION)
+			switch(this) 
+			{
+			case EROSION:
 			{
 				DistanceMapBinaryErosion3D algo = new DistanceMapBinaryErosion3D(radius);
 				DefaultAlgoListener.monitor(algo);
 				return algo.process(image);
 			}
-			else
+			case DILATION:
 			{
 				DistanceMapBinaryDilation3D algo = new DistanceMapBinaryDilation3D(radius);
 				DefaultAlgoListener.monitor(algo);
 				return algo.process(image);
+			}
+			case OPENING:
+			{
+				DistanceMapBinaryOpening3D algo = new DistanceMapBinaryOpening3D(radius);
+				DefaultAlgoListener.monitor(algo);
+				return algo.process(image);
+			}
+			case CLOSING:
+			{
+				DistanceMapBinaryClosing3D algo = new DistanceMapBinaryClosing3D(radius);
+				DefaultAlgoListener.monitor(algo);
+				return algo.process(image);
+			}
+			default:
+			{
+				throw new RuntimeException("Can not manange this Operation: " + label);
+			}
 			}
 		}
 
