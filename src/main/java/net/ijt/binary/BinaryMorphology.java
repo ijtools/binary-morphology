@@ -112,4 +112,11 @@ public class BinaryMorphology
 		
 		return Relational.GE.process(distMap, (radius + 0.5) * weights[0]);
 	}
+	
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private BinaryMorphology()
+	{
+	}
 }

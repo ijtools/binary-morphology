@@ -17,11 +17,11 @@ import net.ijt.binary.Relational;
  * @author dlegland
  *
  */
-public class BinaryDilationByDisk extends AlgoStub implements ByteProcessorOperator, AlgoListener
+public class DistanceMapBinaryDilation extends AlgoStub implements ByteProcessorOperator, AlgoListener
 {
 	double radius;
 	
-	public BinaryDilationByDisk(double radius)
+	public DistanceMapBinaryDilation(double radius)
 	{
 		this.radius = radius;
 	}

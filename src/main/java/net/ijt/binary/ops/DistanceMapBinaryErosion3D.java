@@ -15,11 +15,11 @@ import inra.ijpb.binary.distmap.DistanceTransform3D4WeightsShort;
  * @author dlegland
  *
  */
-public class BinaryErosion3DByBall extends AlgoStub implements AlgoListener
+public class DistanceMapBinaryErosion3D extends AlgoStub implements AlgoListener
 {
 	double radius;
 	
-	public BinaryErosion3DByBall(double radius)
+	public DistanceMapBinaryErosion3D(double radius)
 	{
 		this.radius = radius;
 	}

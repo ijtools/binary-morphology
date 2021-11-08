@@ -17,11 +17,11 @@ import net.ijt.binary.Relational;
  * @author dlegland
  *
  */
-public class BinaryErosionByDisk extends AlgoStub implements ByteProcessorOperator, AlgoListener
+public class DistanceMapBinaryErosion extends AlgoStub implements ByteProcessorOperator, AlgoListener
 {
 	double radius;
 	
-	public BinaryErosionByDisk(double radius)
+	public DistanceMapBinaryErosion(double radius)
 	{
 		this.radius = radius;
 	}

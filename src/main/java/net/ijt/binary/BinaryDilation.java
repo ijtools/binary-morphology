@@ -15,6 +15,7 @@ import inra.ijpb.util.IJUtils;
  * @author dlegland
  *
  */
+@Deprecated
 public class BinaryDilation implements PlugIn
 {
 
