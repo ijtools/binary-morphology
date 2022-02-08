@@ -8,6 +8,9 @@ import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 
 /**
+ * A static collection of relational operators that can be used to apply
+ * thresholds on 2D/3D images.
+ * 
  * @author dlegland
  *
  */
@@ -286,9 +289,30 @@ public interface Relational
 	
 	
 	
-	
+	/**
+     * Applies this relational operator to the 2D input image, using the
+     * specified value as threshold.
+     * 
+     * @param image
+     *            the image to process
+     * @param value
+     *            the value to use as threshold
+     * @return a new (binary) image corresponding to the comparison of each
+     *         element within the input image
+     */
 	public ByteProcessor process(ImageProcessor image, double value);
 
+    /**
+     * Applies this relational operator to the 3D input image, using the
+     * specified value as threshold.
+     * 
+     * @param image
+     *            the 3D image to process
+     * @param value
+     *            the value to use as threshold
+     * @return a new (binary) 3D image corresponding to the comparison of each
+     *         element within the input image
+     */
 	public ImageStack process(ImageStack image, double value);
 
 }

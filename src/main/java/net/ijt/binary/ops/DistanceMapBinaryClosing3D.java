@@ -32,8 +32,8 @@ public class DistanceMapBinaryClosing3D extends DistanceMapBasedOperator3D
 		this.radius = radius;
 	}
 
-//	@Override
-	public ImageStack process(ImageStack image) 
+	@Override
+	public ImageStack processBinary(ImageStack image) 
 	{
         // compute the threshold value
         double threshold = (radius + 0.5);

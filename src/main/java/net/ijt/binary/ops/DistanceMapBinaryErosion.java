@@ -35,7 +35,7 @@ public class DistanceMapBinaryErosion extends DistanceMapBasedOperator
 	}
 
 	@Override
-	public ByteProcessor process(ByteProcessor image) 
+	public ByteProcessor processBinary(ByteProcessor image) 
 	{
 		// compute distance map
 		fireStatusChanged(this, "Compute Distance Map");

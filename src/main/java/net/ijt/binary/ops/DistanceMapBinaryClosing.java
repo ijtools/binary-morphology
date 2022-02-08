@@ -35,7 +35,7 @@ public class DistanceMapBinaryClosing extends DistanceMapBasedOperator
     }
 
 	@Override
-	public ByteProcessor process(ByteProcessor image) 
+	public ByteProcessor processBinary(ByteProcessor image) 
 	{
 		// compute threshold value for distance maps
         double threshold = (radius + 0.5);

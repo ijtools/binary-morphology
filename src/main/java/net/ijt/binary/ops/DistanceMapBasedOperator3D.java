@@ -21,7 +21,7 @@ import inra.ijpb.binary.distmap.DistanceTransform3D;
  * @author dlegland
  *
  */
-public abstract class DistanceMapBasedOperator3D extends AlgoStub implements AlgoListener
+public abstract class DistanceMapBasedOperator3D extends AlgoStub implements BinaryImageOperator3D, AlgoListener
 {
     protected DistanceTransform3D distanceTransform;
     

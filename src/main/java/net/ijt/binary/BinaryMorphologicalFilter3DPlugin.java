@@ -70,25 +70,25 @@ public class BinaryMorphologicalFilter3DPlugin implements PlugIn
 			{
 				DistanceMapBinaryErosion3D algo = new DistanceMapBinaryErosion3D(radius);
 				DefaultAlgoListener.monitor(algo);
-				return algo.process(image);
+				return algo.processBinary(image);
 			}
 			case DILATION:
 			{
 				DistanceMapBinaryDilation3D algo = new DistanceMapBinaryDilation3D(radius);
 				DefaultAlgoListener.monitor(algo);
-				return algo.process(image);
+				return algo.processBinary(image);
 			}
 			case OPENING:
 			{
 				DistanceMapBinaryOpening3D algo = new DistanceMapBinaryOpening3D(radius);
 				DefaultAlgoListener.monitor(algo);
-				return algo.process(image);
+				return algo.processBinary(image);
 			}
 			case CLOSING:
 			{
 				DistanceMapBinaryClosing3D algo = new DistanceMapBinaryClosing3D(radius);
 				DefaultAlgoListener.monitor(algo);
-				return algo.process(image);
+				return algo.processBinary(image);
 			}
 			default:
 			{

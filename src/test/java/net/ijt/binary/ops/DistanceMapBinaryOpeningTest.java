@@ -16,7 +16,7 @@ import ij.process.ByteProcessor;
 public class DistanceMapBinaryOpeningTest 
 {
 	/**
-	 * Test method for {@link net.ijt.binary.ops.DistanceMapBinaryOpening#process(ij.process.ByteProcessor)}.
+	 * Test method for {@link net.ijt.binary.ops.DistanceMapBinaryOpening#processBinary(ij.process.ByteProcessor)}.
 	 */
 	@Test
 	public final void testProcess_radius2() 
@@ -41,7 +41,7 @@ public class DistanceMapBinaryOpeningTest
 		}
 		
 		DistanceMapBinaryOpening op = new DistanceMapBinaryOpening(3);
-		ByteProcessor res = op.process(image);
+		ByteProcessor res = op.processBinary(image);
 		
 		assertEquals(30, res.getWidth());
 		assertEquals(16, res.getHeight());

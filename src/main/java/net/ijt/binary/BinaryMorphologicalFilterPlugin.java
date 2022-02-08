@@ -92,25 +92,25 @@ public class BinaryMorphologicalFilterPlugin implements ExtendedPlugInFilter,
 			{
 				DistanceMapBinaryErosion algo = new DistanceMapBinaryErosion(radius);
 				DefaultAlgoListener.monitor(algo);
-				return algo.process(image);
+				return algo.processBinary(image);
 			}
 			case DILATION: 
 			{
 				DistanceMapBinaryDilation algo = new DistanceMapBinaryDilation(radius);
 				DefaultAlgoListener.monitor(algo);
-				return algo.process(image);
+				return algo.processBinary(image);
 			}
 			case OPENING: 
 			{
 				DistanceMapBinaryOpening algo = new DistanceMapBinaryOpening(radius);
 				DefaultAlgoListener.monitor(algo);
-				return algo.process(image);
+				return algo.processBinary(image);
 			}
 			case CLOSING: 
 			{
 				DistanceMapBinaryClosing algo = new DistanceMapBinaryClosing(radius);
 				DefaultAlgoListener.monitor(algo);
-				return algo.process(image);
+				return algo.processBinary(image);
 			}
 
 			default: 

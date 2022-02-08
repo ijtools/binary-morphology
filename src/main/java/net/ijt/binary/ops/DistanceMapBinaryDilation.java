@@ -35,7 +35,7 @@ public class DistanceMapBinaryDilation extends DistanceMapBasedOperator
 	}
 
 	@Override
-	public ByteProcessor process(ByteProcessor image) 
+	public ByteProcessor processBinary(ByteProcessor image) 
 	{
 		// need to invert
 		fireStatusChanged(this, "Invert image");

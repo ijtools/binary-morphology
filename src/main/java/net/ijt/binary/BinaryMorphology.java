@@ -38,7 +38,7 @@ public class BinaryMorphology
 	public static final ByteProcessor dilationDisk(ByteProcessor image, double radius)
 	{
 	    DistanceMapBinaryDilation algo = new DistanceMapBinaryDilation(radius);
-	    return algo.process(image);
+	    return algo.processBinary(image);
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class BinaryMorphology
 	public static final ByteProcessor erosionDisk(ByteProcessor image, double radius)
 	{
         DistanceMapBinaryErosion algo = new DistanceMapBinaryErosion(radius);
-        return algo.process(image);
+        return algo.processBinary(image);
 	}
 	
 
@@ -79,7 +79,7 @@ public class BinaryMorphology
 	public static final ImageStack dilationBall(ImageStack image, double radius)
 	{
 	    DistanceMapBinaryDilation3D algo = new DistanceMapBinaryDilation3D(radius);
-        return algo.process(image);
+        return algo.processBinary(image);
 	}
 	
 	/**
@@ -99,7 +99,7 @@ public class BinaryMorphology
 	public static final ImageStack erosionBall(ImageStack image, double radius)
 	{
 	    DistanceMapBinaryErosion3D algo = new DistanceMapBinaryErosion3D(radius);
-	    return algo.process(image);
+	    return algo.processBinary(image);
 	}
 	
 	/**
