@@ -38,9 +38,14 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <scope>test</scope>
         </dependency>
         
-        <!-- Should add a dependency to the MorphoLibJ library -->
+        <!-- Add a dependency to the MorphoLibJ library -->
         <!-- Version 1.5.0 is needed for management of chamfer masks -->
-   
+        <dependency>
+          <groupId>fr.inra.ijpb</groupId>
+          <artifactId>MorphoLibJ_</artifactId>
+          <version>1.5.0</version>
+        </dependency>
+  
 	</dependencies>
     
     
