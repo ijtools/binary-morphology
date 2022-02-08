@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-package net.ijt.binary;
+package net.ijt.binary.plugins;
 
 
 import java.awt.AWTEvent;
@@ -32,6 +32,7 @@ import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import inra.ijpb.algo.DefaultAlgoListener;
+import net.ijt.binary.BinaryMorphology;
 import net.ijt.binary.ops.DistanceMapBinaryClosing;
 import net.ijt.binary.ops.DistanceMapBinaryDilation;
 import net.ijt.binary.ops.DistanceMapBinaryErosion;

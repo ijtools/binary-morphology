@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-package net.ijt.binary;
+package net.ijt.binary.plugins;
 
 import ij.IJ;
 import ij.ImagePlus;
@@ -29,6 +29,7 @@ import ij.gui.GenericDialog;
 import ij.plugin.PlugIn;
 import inra.ijpb.algo.DefaultAlgoListener;
 import inra.ijpb.util.IJUtils;
+import net.ijt.binary.BinaryMorphology;
 import net.ijt.binary.ops.DistanceMapBinaryClosing3D;
 import net.ijt.binary.ops.DistanceMapBinaryDilation3D;
 import net.ijt.binary.ops.DistanceMapBinaryErosion3D;
