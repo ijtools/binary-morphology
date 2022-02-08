@@ -4,22 +4,29 @@
 package net.ijt.binary.ops;
 
 import ij.ImageStack;
-import inra.ijpb.algo.AlgoEvent;
-import inra.ijpb.algo.AlgoListener;
-import inra.ijpb.algo.AlgoStub;
-import inra.ijpb.binary.distmap.ChamferDistanceTransform3DShort;
-import inra.ijpb.binary.distmap.ChamferMask3D;
-import inra.ijpb.binary.distmap.ChamferMasks3D;
+import inra.ijpb.binary.distmap.ChamferDistanceTransform3D;
 import inra.ijpb.binary.distmap.DistanceTransform3D;
 
 /**
- * @author dlegland
+ * Morphological closing (dilation followed by erosion) for 3D binary images.
  *
+ * @see DistanceMapBinaryDilation3D
+ * @see DistanceMapBinaryErosion3D
+ * @see DistanceMapBinaryOpening3D
+ * @see DistanceMapBinaryClosing
+ * 
+ * @author dlegland
  */
-public class DistanceMapBinaryClosing3D extends AlgoStub implements AlgoListener
+public class DistanceMapBinaryClosing3D extends DistanceMapBasedOperator3D
 {
 	double radius;
 	
+    public DistanceMapBinaryClosing3D(DistanceTransform3D distanceTransform, double radius)
+    {
+        super(distanceTransform);
+        this.radius = radius;
+    }
+
 	public DistanceMapBinaryClosing3D(double radius)
 	{
 		this.radius = radius;
@@ -28,25 +35,26 @@ public class DistanceMapBinaryClosing3D extends AlgoStub implements AlgoListener
 //	@Override
 	public ImageStack process(ImageStack image) 
 	{
-		// create distance map operator
-		ChamferMask3D mask = ChamferMasks3D.WEIGHTS_10_14_17_22_34_30.getMask();
-		DistanceTransform3D algo = new ChamferDistanceTransform3DShort(mask, false);
-		algo.addAlgoListener(this);
-		double threshold = (radius + 0.5) * mask.getNormalizationWeight(); 
+        // compute the threshold value
+        double threshold = (radius + 0.5);
+        if (this.distanceTransform instanceof ChamferDistanceTransform3D)
+        {
+            threshold *= ((ChamferDistanceTransform3D) distanceTransform).mask().getNormalizationWeight();
+        }
 		
 		// need to invert
-		this.fireStatusChanged(this, "Invert image");
+		fireStatusChanged(this, "Invert image");
 		BinaryStackInverter inverter = new BinaryStackInverter();
 		inverter.addAlgoListener(this);
 		ImageStack imageInv = image.duplicate();
 		inverter.processInPlace(imageInv);
 		
 		// compute distance map
-		this.fireStatusChanged(this, "Compute Distance Map");
-		ImageStack distMap = algo.distanceMap(imageInv);
+		fireStatusChanged(this, "Compute Distance Map");
+		ImageStack distMap = this.distanceTransform.distanceMap(imageInv);
 		
 		// threshold the distance map		
-		this.fireStatusChanged(this, "Threshold Distance Map");
+		fireStatusChanged(this, "Threshold Distance Map");
 		CompareImageWithValue comp = new CompareImageWithValue();
 		comp.addAlgoListener(this);
 		
@@ -54,23 +62,10 @@ public class DistanceMapBinaryClosing3D extends AlgoStub implements AlgoListener
 		comp.process(distMap, CompareImageWithValue.Operator.LT, threshold, imageInv);
 		
 		// compute distance map on dilated image
-		this.fireStatusChanged(this, "Compute Distance Map on dilated image");
-		distMap = algo.distanceMap(imageInv);
+		fireStatusChanged(this, "Compute Distance Map on dilated image");
+		distMap = this.distanceTransform.distanceMap(imageInv);
 		
 		comp.process(distMap, CompareImageWithValue.Operator.GE, threshold, imageInv);
 		return imageInv;
 	}
-
-	@Override
-	public void algoProgressChanged(AlgoEvent evt) 
-	{
-		this.fireProgressChanged(evt);
-	}
-
-	@Override
-	public void algoStatusChanged(AlgoEvent evt)
-	{
-		this.fireStatusChanged(evt);
-	}
-	
 }

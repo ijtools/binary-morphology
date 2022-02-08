@@ -2,15 +2,19 @@ package net.ijt.binary;
 
 import ij.ImageStack;
 import ij.process.ByteProcessor;
-import ij.process.ImageProcessor;
-import inra.ijpb.binary.BinaryImages;
-import inra.ijpb.binary.distmap.ChamferMask2D;
-import inra.ijpb.binary.distmap.ChamferMask3D;
-import inra.ijpb.binary.distmap.ChamferMasks3D;
-import inra.ijpb.data.image.Images3D;
+import net.ijt.binary.ops.DistanceMapBinaryDilation;
+import net.ijt.binary.ops.DistanceMapBinaryDilation3D;
+import net.ijt.binary.ops.DistanceMapBinaryErosion;
+import net.ijt.binary.ops.DistanceMapBinaryErosion3D;
 
 /**
- * Binary morphological filters.
+ * A collection of static method for performing morphological filters (erosion,
+ * dilation) on binary 2D or 3D images.
+ * 
+ * @see net.ijt.binary.ops.DistanceMapBinaryDilation;
+ * @see net.ijt.binary.ops.DistanceMapBinaryErosion;
+ * @see net.ijt.binary.ops.DistanceMapBinaryDilation3D;
+ * @see net.ijt.binary.ops.DistanceMapBinaryErosion3D;
  * 
  * @author dlegland
  *
@@ -21,7 +25,7 @@ public class BinaryMorphology
 	 * Computes the dilation of the binary image using as structuring element a
 	 * disk with the specified radius.
 	 * 
-	 * Implementation relies on computation of distance transforms. The shape of
+	 * Implementation relies on computation of distance transform. The shape of
 	 * the structuring element will depends on the algorithm used for distance
 	 * transform computation, usually chamfer-based.
 	 * 
@@ -33,22 +37,15 @@ public class BinaryMorphology
 	 */
 	public static final ByteProcessor dilationDisk(ByteProcessor image, double radius)
 	{
-		// need to invert
-		ImageProcessor imageInv = image.duplicate();
-		imageInv.invert();
-		
-		ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT; 
-		ImageProcessor distMap = BinaryImages.distanceMap(imageInv, mask, false, false);
-		
-		double threshold = (radius + 0.5) * mask.getNormalizationWeight();
-		return Relational.LT.process(distMap, threshold);
+	    DistanceMapBinaryDilation algo = new DistanceMapBinaryDilation(radius);
+	    return algo.process(image);
 	}
 	
 	/**
 	 * Computes the erosion of the binary image using as structuring element a
 	 * disk with the specified radius.
 	 * 
-	 * Implementation relies on computation of distance transforms. The shape of
+	 * Implementation relies on computation of distance transform. The shape of
 	 * the structuring element will depends on the algorithm used for distance
 	 * transform computation, usually chamfer-based.
 	 * 
@@ -60,11 +57,8 @@ public class BinaryMorphology
 	 */
 	public static final ByteProcessor erosionDisk(ByteProcessor image, double radius)
 	{
-		ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT; 
-		ImageProcessor distMap = BinaryImages.distanceMap(image, mask, false, false);
-		
-		double threshold = (radius + 0.5) * mask.getNormalizationWeight();
-		return Relational.GE.process(distMap, threshold);
+        DistanceMapBinaryErosion algo = new DistanceMapBinaryErosion(radius);
+        return algo.process(image);
 	}
 	
 
@@ -84,15 +78,8 @@ public class BinaryMorphology
 	 */
 	public static final ImageStack dilationBall(ImageStack image, double radius)
 	{
-		// need to invert
-		ImageStack imageInv = image.duplicate();
-		Images3D.invert(imageInv);
-		
-		ChamferMask3D mask = ChamferMasks3D.WEIGHTS_10_14_17_22_34_30.getMask();
-		ImageStack distMap = BinaryImages.distanceMap(imageInv, mask, false, false);
-		
-		double threshold = (radius + 0.5) * mask.getNormalizationWeight();
-		return Relational.LT.process(distMap, threshold);
+	    DistanceMapBinaryDilation3D algo = new DistanceMapBinaryDilation3D(radius);
+        return algo.process(image);
 	}
 	
 	/**
@@ -111,11 +98,8 @@ public class BinaryMorphology
 	 */
 	public static final ImageStack erosionBall(ImageStack image, double radius)
 	{
-		ChamferMask3D mask = ChamferMasks3D.WEIGHTS_10_14_17_22_34_30.getMask();
-		ImageStack distMap = BinaryImages.distanceMap(image, mask, false, false);
-		
-		double threshold = (radius + 0.5) * mask.getNormalizationWeight();
-		return Relational.GE.process(distMap, threshold);
+	    DistanceMapBinaryErosion3D algo = new DistanceMapBinaryErosion3D(radius);
+	    return algo.process(image);
 	}
 	
 	/**

@@ -11,7 +11,7 @@ import ij.process.ByteProcessor;
  * 
  * @author dlegland
  */
-public interface ByteProcessorOperator
+public interface BinaryImageOperator
 {
 	public ByteProcessor process(ByteProcessor image);
 }

@@ -5,22 +5,30 @@ package net.ijt.binary.ops;
 
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
-import inra.ijpb.algo.AlgoEvent;
-import inra.ijpb.algo.AlgoListener;
-import inra.ijpb.algo.AlgoStub;
-import inra.ijpb.binary.distmap.ChamferDistanceTransform2DShort;
-import inra.ijpb.binary.distmap.ChamferMask2D;
+import inra.ijpb.binary.distmap.ChamferDistanceTransform2D;
 import inra.ijpb.binary.distmap.DistanceTransform;
 import net.ijt.binary.Relational;
 
 /**
- * @author dlegland
+ * Morphological dilation for 2D binary images.
  *
+ * @see DistanceMapBinaryErosion
+ * @see DistanceMapBinaryClosing
+ * @see DistanceMapBinaryOpening
+ * @see DistanceMapBinaryDilation3D
+ * 
+ * @author dlegland
  */
-public class DistanceMapBinaryDilation extends AlgoStub implements ByteProcessorOperator, AlgoListener
+public class DistanceMapBinaryDilation extends DistanceMapBasedOperator
 {
 	double radius;
 	
+    public DistanceMapBinaryDilation(DistanceTransform distanceTransform, double radius)
+    {
+        super(distanceTransform);
+        this.radius = radius;
+    }
+
 	public DistanceMapBinaryDilation(double radius)
 	{
 		this.radius = radius;
@@ -30,35 +38,21 @@ public class DistanceMapBinaryDilation extends AlgoStub implements ByteProcessor
 	public ByteProcessor process(ByteProcessor image) 
 	{
 		// need to invert
-		this.fireStatusChanged(this, "Invert image");
+		fireStatusChanged(this, "Invert image");
 		ImageProcessor imageInv = image.duplicate();
 		imageInv.invert();
 		
-		// create distance map operator
-		ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT;
-		DistanceTransform algo = new ChamferDistanceTransform2DShort(mask, false);
-		algo.addAlgoListener(this);
-		
 		// compute distance map
-		this.fireStatusChanged(this, "Compute Distance Map");
-		ImageProcessor distMap = algo.distanceMap(imageInv);
+		fireStatusChanged(this, "Compute Distance Map");
+		ImageProcessor distMap = this.distanceTransform.distanceMap(imageInv);
 		
 		// Apply threshold on distance map
-		this.fireStatusChanged(this, "Threshold Distance Map");
-		double threshold = (radius + 0.5) * mask.getNormalizationWeight(); 
+		fireStatusChanged(this, "Threshold Distance Map");
+		double threshold = (radius + 0.5);
+		if (this.distanceTransform instanceof ChamferDistanceTransform2D)
+		{
+		    threshold *= ((ChamferDistanceTransform2D) distanceTransform).mask().getNormalizationWeight();
+		}
 		return Relational.LT.process(distMap, threshold);
 	}
-
-	@Override
-	public void algoProgressChanged(AlgoEvent evt) 
-	{
-		this.fireProgressChanged(evt);
-	}
-
-	@Override
-	public void algoStatusChanged(AlgoEvent evt)
-	{
-		this.fireStatusChanged(evt);
-	}
-	
 }
