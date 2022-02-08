@@ -7,9 +7,10 @@ import ij.ImageStack;
 import inra.ijpb.algo.AlgoEvent;
 import inra.ijpb.algo.AlgoListener;
 import inra.ijpb.algo.AlgoStub;
-import inra.ijpb.binary.ChamferWeights3D;
+import inra.ijpb.binary.distmap.ChamferDistanceTransform3DShort;
+import inra.ijpb.binary.distmap.ChamferMask3D;
+import inra.ijpb.binary.distmap.ChamferMasks3D;
 import inra.ijpb.binary.distmap.DistanceTransform3D;
-import inra.ijpb.binary.distmap.DistanceTransform3D4WeightsShort;
 
 /**
  * @author dlegland
@@ -28,9 +29,10 @@ public class DistanceMapBinaryOpening3D extends AlgoStub implements AlgoListener
 	public ImageStack process(ImageStack image) 
 	{
 		// create distance map operator
-		short[] weights = ChamferWeights3D.WEIGHTS_3_4_5_7.getShortWeights();
-		DistanceTransform3D algo = new DistanceTransform3D4WeightsShort(weights, false);
+		ChamferMask3D mask = ChamferMasks3D.WEIGHTS_10_14_17_22_34_30.getMask();
+		DistanceTransform3D algo = new ChamferDistanceTransform3DShort(mask, false);
 		algo.addAlgoListener(this);
+		double threshold = (radius + 0.5) * mask.getNormalizationWeight(); 
 		
 		// compute distance map
 		this.fireStatusChanged(this, "Compute Distance Map");
@@ -40,14 +42,14 @@ public class DistanceMapBinaryOpening3D extends AlgoStub implements AlgoListener
 		this.fireStatusChanged(this, "Threshold Distance Map");
 		CompareImageWithValue comp = new CompareImageWithValue();
 		comp.addAlgoListener(this);
-		ImageStack res = comp.process(distMap, CompareImageWithValue.Operator.LT, (radius + 0.5) * weights[0]);
+		ImageStack res = comp.process(distMap, CompareImageWithValue.Operator.LT, threshold);
 		
 		// compute distance map on eroded image
 		this.fireStatusChanged(this, "Compute Distance Map on eroded image");
 		distMap = algo.distanceMap(res);
 		
 		// compute threshold on distance map
-		comp.process(distMap, CompareImageWithValue.Operator.LT, (radius + 0.5) * weights[0], res);
+		comp.process(distMap, CompareImageWithValue.Operator.LT, threshold, res);
 		return res;
 	}
 

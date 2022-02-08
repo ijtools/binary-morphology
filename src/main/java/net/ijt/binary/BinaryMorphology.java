@@ -4,8 +4,9 @@ import ij.ImageStack;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import inra.ijpb.binary.BinaryImages;
-import inra.ijpb.binary.ChamferWeights;
-import inra.ijpb.binary.ChamferWeights3D;
+import inra.ijpb.binary.distmap.ChamferMask2D;
+import inra.ijpb.binary.distmap.ChamferMask3D;
+import inra.ijpb.binary.distmap.ChamferMasks3D;
 import inra.ijpb.data.image.Images3D;
 
 /**
@@ -36,10 +37,11 @@ public class BinaryMorphology
 		ImageProcessor imageInv = image.duplicate();
 		imageInv.invert();
 		
-		short[] weights = ChamferWeights.CHESSKNIGHT.getShortWeights();
-		ImageProcessor distMap = BinaryImages.distanceMap(imageInv, weights, false);
+		ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT; 
+		ImageProcessor distMap = BinaryImages.distanceMap(imageInv, mask, false, false);
 		
-		return Relational.LT.process(distMap, (radius + 0.5) * weights[0]);
+		double threshold = (radius + 0.5) * mask.getNormalizationWeight();
+		return Relational.LT.process(distMap, threshold);
 	}
 	
 	/**
@@ -58,10 +60,11 @@ public class BinaryMorphology
 	 */
 	public static final ByteProcessor erosionDisk(ByteProcessor image, double radius)
 	{
-		short[] weights = ChamferWeights.CHESSKNIGHT.getShortWeights();
-		ImageProcessor distMap = BinaryImages.distanceMap(image, weights, false);
+		ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT; 
+		ImageProcessor distMap = BinaryImages.distanceMap(image, mask, false, false);
 		
-		return Relational.GE.process(distMap, (radius + 0.5) * weights[0]);
+		double threshold = (radius + 0.5) * mask.getNormalizationWeight();
+		return Relational.GE.process(distMap, threshold);
 	}
 	
 
@@ -85,10 +88,11 @@ public class BinaryMorphology
 		ImageStack imageInv = image.duplicate();
 		Images3D.invert(imageInv);
 		
-		short[] weights = ChamferWeights3D.WEIGHTS_3_4_5_7.getShortWeights();
-		ImageStack distMap = BinaryImages.distanceMap(imageInv, weights, false);
+		ChamferMask3D mask = ChamferMasks3D.WEIGHTS_10_14_17_22_34_30.getMask();
+		ImageStack distMap = BinaryImages.distanceMap(imageInv, mask, false, false);
 		
-		return Relational.LT.process(distMap, (radius + 0.5) * weights[0]);
+		double threshold = (radius + 0.5) * mask.getNormalizationWeight();
+		return Relational.LT.process(distMap, threshold);
 	}
 	
 	/**
@@ -107,10 +111,11 @@ public class BinaryMorphology
 	 */
 	public static final ImageStack erosionBall(ImageStack image, double radius)
 	{
-		short[] weights = ChamferWeights3D.WEIGHTS_3_4_5_7.getShortWeights();
-		ImageStack distMap = BinaryImages.distanceMap(image, weights, false);
+		ChamferMask3D mask = ChamferMasks3D.WEIGHTS_10_14_17_22_34_30.getMask();
+		ImageStack distMap = BinaryImages.distanceMap(image, mask, false, false);
 		
-		return Relational.GE.process(distMap, (radius + 0.5) * weights[0]);
+		double threshold = (radius + 0.5) * mask.getNormalizationWeight();
+		return Relational.GE.process(distMap, threshold);
 	}
 	
 	/**

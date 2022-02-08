@@ -7,9 +7,10 @@ import ij.ImageStack;
 import inra.ijpb.algo.AlgoEvent;
 import inra.ijpb.algo.AlgoListener;
 import inra.ijpb.algo.AlgoStub;
-import inra.ijpb.binary.ChamferWeights3D;
+import inra.ijpb.binary.distmap.ChamferDistanceTransform3DShort;
+import inra.ijpb.binary.distmap.ChamferMask3D;
+import inra.ijpb.binary.distmap.ChamferMasks3D;
 import inra.ijpb.binary.distmap.DistanceTransform3D;
-import inra.ijpb.binary.distmap.DistanceTransform3D4WeightsShort;
 
 /**
  * @author dlegland
@@ -27,17 +28,17 @@ public class DistanceMapBinaryDilation3D extends AlgoStub implements AlgoListene
 //	@Override
 	public ImageStack process(ImageStack image) 
 	{
+		// create distance map operator
+		ChamferMask3D mask = ChamferMasks3D.WEIGHTS_10_14_17_22_34_30.getMask();
+		DistanceTransform3D algo = new ChamferDistanceTransform3DShort(mask, false);
+		algo.addAlgoListener(this);
+		
 		// need to invert
 		this.fireStatusChanged(this, "Invert image");
 		BinaryStackInverter inverter = new BinaryStackInverter();
 		inverter.addAlgoListener(this);
 		ImageStack imageInv = image.duplicate();
 		inverter.processInPlace(imageInv);
-		
-		// create distance map operator
-		short[] weights = ChamferWeights3D.WEIGHTS_3_4_5_7.getShortWeights();
-		DistanceTransform3D algo = new DistanceTransform3D4WeightsShort(weights, false);
-		algo.addAlgoListener(this);
 		
 		// compute distance map
 		this.fireStatusChanged(this, "Compute Distance Map");
@@ -49,7 +50,8 @@ public class DistanceMapBinaryDilation3D extends AlgoStub implements AlgoListene
 		comp.addAlgoListener(this);
 		
 		// compute comparison using previously allocated array
-		comp.process(distMap, CompareImageWithValue.Operator.LT, (radius + 0.5) * weights[0], imageInv);
+		double threshold = (radius + 0.5) * mask.getNormalizationWeight(); 
+		comp.process(distMap, CompareImageWithValue.Operator.LT, threshold, imageInv);
 		return imageInv;
 	}
 

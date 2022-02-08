@@ -8,9 +8,9 @@ import ij.process.ImageProcessor;
 import inra.ijpb.algo.AlgoEvent;
 import inra.ijpb.algo.AlgoListener;
 import inra.ijpb.algo.AlgoStub;
-import inra.ijpb.binary.ChamferWeights;
+import inra.ijpb.binary.distmap.ChamferDistanceTransform2DShort;
+import inra.ijpb.binary.distmap.ChamferMask2D;
 import inra.ijpb.binary.distmap.DistanceTransform;
-import inra.ijpb.binary.distmap.DistanceTransform5x5Short;
 import net.ijt.binary.Relational;
 
 /**
@@ -30,16 +30,20 @@ public class DistanceMapBinaryErosion extends AlgoStub implements ByteProcessorO
 	public ByteProcessor process(ByteProcessor image) 
 	{
 		// create distance map operator
-		short[] weights = ChamferWeights.CHESSKNIGHT.getShortWeights();
-		DistanceTransform algo = new DistanceTransform5x5Short(weights, false);
+//		short[] weights = ChamferWeights.CHESSKNIGHT.getShortWeights();
+//		DistanceTransform algo = new DistanceTransform5x5Short(weights, false);
+		ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT;
+		DistanceTransform algo = new ChamferDistanceTransform2DShort(mask, false);
 		algo.addAlgoListener(this);
 		
 		// compute distance map
 		this.fireStatusChanged(this, "Compute Distance Map");
 		ImageProcessor distMap = algo.distanceMap(image);
 		
+		// Apply threshold on distance map
 		this.fireStatusChanged(this, "Threshold Distance Map");
-		return Relational.GE.process(distMap, (radius + 0.5) * weights[0]);
+		double threshold = (radius + 0.5) * mask.getNormalizationWeight(); 
+		return Relational.GE.process(distMap, threshold);
 	}
 
 	@Override
