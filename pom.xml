@@ -16,7 +16,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <!-- ImageJ plugins require an underscore '_' in the name... --> 
     <groupId>net.ijtools</groupId>
     <artifactId>Binary_Morphology</artifactId>
-    <version>0.2.1-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <name>plugins/Binary_Morphology.jar</name>
     <description>Mathematical Morphology for binary images</description>
